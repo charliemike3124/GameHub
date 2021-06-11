@@ -1,7 +1,9 @@
 <template>
-  <div class="p-rel">  
-      <img width="65px" :src="require(`@/assets/${modes[0].url}`)"/>
-      <div class="mode-name"><span >{{modes[0].name}}</span></div>
+  <div class="p-rel text-center">  
+      <img width="250px" :src="require(`@/assets/${modes[0].url}`)"/>
+      <div class="abs-center">
+        <div class="mode-name"><span >{{modes[0].name}}</span></div>
+      </div>
   </div>
 </template>
 
@@ -24,4 +26,8 @@
 
 <style lang="less">
 
+.mode-name{
+    position: relative;
+    left: -50%;
+}
 </style>

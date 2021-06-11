@@ -4,15 +4,20 @@
       <div class="char-column pa-0" v-for="character in lobby.characters" :key="character.id">
         <div class="char-container " data-aos="fade-up" >
           <CharacterGenerator class="ma-auto" :features="character.features" :width="70" :height="70"/>
-          <div style="position: absolute; left: 50%; top: 75%;">
+          <div class="abs-center">
             <div class="name-box"><span>{{character.name}}</span></div>
           </div>
         </div>
       </div>
     </div>
-    <v-row class="gm-container">
-      <v-col lg="4" cols="6">
+    <v-row>
+      <v-col>
         <GameMode />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="text-center">
+        Code: {{lobby.code}}
       </v-col>
     </v-row>
   </v-container>
