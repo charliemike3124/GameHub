@@ -1,0 +1,75 @@
+@spacer: 4px;
+
+:root{
+    --main-color: rgb(185, 115, 53);
+}
+
+.app-container{
+    background: #6295ff;
+    background: radial-gradient(circle, rgba(98,149,255,1) 0%, rgba(18,76,144,1) 100%);
+
+    height: 100%;
+    width: 100%;
+  
+    font-family: cursive !important;
+    font-weight: 500 !important;
+}
+.app-container-inside{    
+    background-repeat: repeat;
+    background-size: 40px;
+    flex-direction: row;
+}
+
+.z-1{
+    z-index: 1;
+}
+
+.p-abs{
+    position: absolute;
+}
+
+.p-rel{
+    position: relative;
+}
+
+.ofx-hidden{
+    overflow-x: hidden;
+}
+.ofy-hidden{
+    overflow-y: hidden;
+}
+.input-max-width{
+    max-width: 150px !important;
+}
+
+.max-height100{
+    max-height: 100% !important;
+}
+
+// Scrollbar
+@scrollbar-color: #a6a9ad;
+@scrollbar-size: @spacer * 1.75;
+@scrollbar-background-color: fade(@scrollbar-color, 25%);
+@scrollbar-thumb-background-color: fade(@scrollbar-color, 60%);
+@scrollbar-thumb-hover-background-color: @scrollbar-color;
+
+::-webkit-scrollbar {
+    width: @scrollbar-size;
+    height: @scrollbar-size;
+    background-color: @scrollbar-background-color;
+}
+
+::-webkit-scrollbar-thumb {
+background-color: @scrollbar-thumb-background-color;
+border-radius: @scrollbar-size;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background-color: @scrollbar-thumb-hover-background-color;
+border-radius: @scrollbar-size;
+}
+
+// vuetify classes
+.v-input__control{        
+    min-height: min-content !important;
+}
