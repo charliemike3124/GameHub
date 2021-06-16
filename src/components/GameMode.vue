@@ -1,7 +1,7 @@
 <template>
   <v-row 
     class="wrapper ma-2" 
-    :class="selectedClass"  
+    :style="selectedStyle"  
     justify="center" 
     @click="selectMode"
   >
@@ -37,13 +37,13 @@ import GameMode from "@/models"
     },
     computed: {      
       ...mapState("lobby", ["selectedMode"]),
-      selectedClass(){
-        let selectedClass = "";
+      selectedStyle(){
+        let selectedStyle = "";
         let mode = GameMode.GameMode(this.name, this.url, this.desc);
         if(this.selectedMode.name == mode.name){
-          selectedClass = "wrapper-selected";
+          selectedStyle = "background-color: #14ff3773;";
         }
-        return selectedClass;
+        return selectedStyle;
       }
     },
     data: () => ({
@@ -77,12 +77,6 @@ import GameMode from "@/models"
   }
   .mode-desc{
     font-size: 0.95em;
-  }
-}
-.wrapper-selected{  
-  background-color: #14ff3773;
-  img{
-    border: 3px solid rgba(86, 146, 101, 0.671);
   }
 }
 .wrapper:hover{    

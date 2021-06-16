@@ -3,6 +3,7 @@ node_modules
 /dist
 /3rdParty
 firebasesecret.json
+/.vs
 
 # local env files
 .env.local
