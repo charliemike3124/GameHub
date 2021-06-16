@@ -22,4 +22,7 @@ export default {
     async SetLobby({commit}, lobby){    
         commit("setLobby", lobby);
     },
+    SetSelectedMode({commit}, mode){
+        commit("setSelectedMode", mode);
+    }
 }

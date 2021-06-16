@@ -4,4 +4,5 @@ export default {
     setLobby: MutationsHelper.set("lobby"), 
     setGettingLobby: MutationsHelper.set("gettingLobby"), 
     setCharacterId: MutationsHelper.set("characterId"), 
+    setSelectedMode: MutationsHelper.set("selectedMode")
 }

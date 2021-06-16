@@ -1,2 +1,3 @@
 import Character from "./Character"
-export default {Character};
+import GameMode from "./GameMode"
+export default {Character, GameMode};
