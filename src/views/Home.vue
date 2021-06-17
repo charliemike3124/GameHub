@@ -41,7 +41,7 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-row justify="center">
+        <v-row justify="center" style="height: 50px;">
           <v-col class="input-max-width" v-show="gettingLobby">
               <v-progress-linear
               indeterminate
@@ -53,7 +53,7 @@
     </v-row>
     <!--Footer-->
     <v-row  justify="center" data-aos="fade-up"  data-aos-delay="900">
-      <v-col class="text-center mt-10">
+      <v-col class="text-center">
         <a class="mx-2" href="https://www.linkedin.com/in/cvillalobosgtz/" target="_blank"><i class="mdi mdi-linkedin"></i></a>
         <v-divider vertical/>
         <a class="mx-2" @click.stop="showContactForm=true">Contact</a>
@@ -82,7 +82,7 @@
 import Character from "@/models";
 import { CharacterCreator, ContactForm } from "@/components";
 import { StringGenerators } from "@/resources/StringHelper";
-import {mapActions, mapState} from "vuex";
+import {  mapActions, mapState} from "vuex";
 
 export default {
   name: 'Home',
@@ -117,7 +117,8 @@ export default {
       let lobby = {
         code: code,
         characters: [character],
-        hostId: id
+        hostId: id,
+        gameConfig: {}
       }
       await this.CreateLobby(lobby);
       if(!!this.lobby) this.$router.push({path: 'Lobby'});
@@ -141,9 +142,7 @@ export default {
   },
 
   mounted(){
-    if(!!this.lobby){      
-      this.SetLobby(null);
-    }
+    if(!!this.lobby)  this.SetLobby(null);
   }
 }
 

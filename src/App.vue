@@ -22,7 +22,9 @@ export default {
 </script>
 
 <style lang="less">
-
+a{
+  color: var(--text-color) !important;
+}
 .app-container{
     background: var(--main-color);
     background: radial-gradient(circle, var(--main-color) 0%, rgba(18,76,144,1) 100%);

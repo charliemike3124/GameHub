@@ -17,6 +17,17 @@
                 icon="mdi-crown"
               >
               </v-badge>
+              <v-badge
+                v-if="lobby.hasStarted"
+                bordered
+                offset-x="15"
+                offset-y="-15"
+                class="score-badge"
+                color="blue"
+                :content="character.score || '0'"
+                label="score"
+              >
+              </v-badge>
             </div>
           </div>
         </div>
@@ -24,7 +35,7 @@
     </div>
 
     <!--LOBBY-->
-    <div class="max-height gm-cont" :class="lobbyContClass">
+    <div class="max-height gm-cont" :class="lobbyContClass" v-if="!gameStarted">
       <v-row>
         <v-col cols="1">
           <v-divider/>
@@ -66,9 +77,11 @@
       </v-row>
     </div>
     <!--GAME-->
-    <div class="" v-if="gameStarted">
-      <component :is="selectedMode.component"></component>
-    </div>
+    <component 
+    v-else 
+    ref="gameRef"
+    :is="lobby.gameMode.component"
+    @resetLobby="resetLobby"></component>
 
   </v-container>
 </template>
@@ -78,6 +91,8 @@ import { mapActions, mapState } from "vuex";
 import { CharacterGenerator, GameMode, KeyDestroyer } from "@/components";
 import { DB } from "@/services";
 import GameModes from "@/resources/GameModes"
+import { StringGenerators } from "@/resources/StringHelper";
+import Character from "@/models";
 
   export default {
     name: 'Lobby',
@@ -90,16 +105,15 @@ import GameModes from "@/resources/GameModes"
 
     data: () => ({
       gameModes: null,
-      gameStarted: false,
-      afterGameStartedClass: ""
+      gameStarted: false
     }),
     computed:{      
       ...mapState("lobby", ["lobby", "selectedMode"]),
-      ...mapState("character", ["characterId"]),
+      ...mapState("character", ["characterFeatures", "characterName", "characterId"]),
       lobbyContClass(){
         let _class = "";
-        if(this.gameStarted){
-          _class = "opacity-0" + ` ${this.afterGameStartedClass}`;
+        if(this.lobby.hasStarted){
+          _class = "opacity-0";
         }
         return _class;
       },
@@ -110,6 +124,8 @@ import GameModes from "@/resources/GameModes"
     methods: {
       ...mapActions("lobby", ["SetLobby", "SetSelectedMode"]),
       onBeforeUnloadHandler(ev){
+        debugger
+        console.log(ev);
         if(ev){    
           this.disconnect();
         }
@@ -117,7 +133,14 @@ import GameModes from "@/resources/GameModes"
       UpdateLobbyState(doc){
         try{
           this.SetLobby(doc.data());
-          this.gameStarted = this.lobby.hasStarted ?? false;
+          if(this.lobby.hasStarted ?? false){
+            setTimeout(() => {
+              this.gameStarted = true;
+            }, 500);
+          }
+          if(this.lobby.gameConfig.winnerId && this.lobby.gameConfig.winnerId != this.characterId){
+            this.$refs.gameRef.lose();
+          }
         }
         catch(e){
           this.disconnect();
@@ -125,36 +148,51 @@ import GameModes from "@/resources/GameModes"
       },
       disconnect(){        
         this.lobby.characters = this.lobby.characters.filter(char => char.id != this.characterId);
-        if(this.isHost){
-          this.lobby.hostId = this.lobby.characters[0].id;
-        }
-        if(this.lobby.characters.length > 1){
-          DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);     
+        if(this.lobby.characters.length > 0){
+          if(this.isHost){
+            this.lobby.hostId = this.lobby.characters[0].id;
+          }  
+          DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);   
         }
         else{
           DB.LobbyService.DeleteLobby(this.lobby.code);          
         } 
       },
       startGame(){
-        this.gameStarted = true;
-        setTimeout(() => {
-          this.afterGameStartedClass = "d-none";
-        }, 500);
         this.lobby.hasStarted = true;
-        this.lobby.game = this.selectedMode.name;
-        this.lobby.characters.forEach(char => {
-          char.score = 0; 
-        })
-        DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);      
-        
+        this.lobby.gameMode = this.selectedMode;
+        this.lobby.characters.forEach(char => char.score = 0);
+        switch (this.selectedMode.name) {
+          case "Key Destroyer":
+            this.lobby.gameConfig = {
+              keyArray: StringGenerators.generateRandomScoredLetters(10,3, 15),
+              maxScore: 10
+            }
+            break;
+        }
+        DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);     
+        setTimeout(() => {
+          this.gameStarted = true;
+        }, 500);        
+      },
+      resetLobby(){        
+        this.lobby.gameConfig = {};
+        this.lobby.gameMode = {};
+        this.lobby.characters.forEach(char => char.score = 0);
+        this.gameStarted = false;
+        this.lobby.hasStarted = false;
       }
     },
     mounted(){
+      if(this.lobby.characters.some(char => char.id != this.characterId)){
+        let character = Character.Character(this.characterName, this.characterFeatures, this.characterId);
+        this.lobby.characters.push(character)
+      }
       DB.Hooks.OnSnapshot(this.UpdateLobbyState, this.lobby.code);
       addEventListener("beforeunload", this.onBeforeUnloadHandler);
-      addEventListener("popstate", this.onBeforeUnloadHandler);      
+      addEventListener("popstate", this.onBeforeUnloadHandler);    
       this.gameModes = GameModes;
-      if(!!this.selectedGameMode && this.isHost){
+      if(!this.selectedGameMode && this.isHost){
         this.SetSelectedMode(this.gameModes[0]);
       }
     }
@@ -164,5 +202,4 @@ import GameModes from "@/resources/GameModes"
 <style lang="less">
  @import (less) "../styles/views/Home.less";
  @import (less) "../styles/views/Lobby.less";
-
 </style>
