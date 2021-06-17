@@ -1,5 +1,7 @@
+
 .home-container{
     width: 100%;
+    margin: 40px 0 !important;
 }
 
 .game-container{
@@ -9,11 +11,14 @@
     box-shadow: inset 0px 3px 0px 0px rgba(211, 211, 211, 0.15), 0px 4px 0px 0px rgba(204, 204, 204, 0.15);
     border-radius: 12px;
     margin-top: 16px;
-}
-
-@media screen and (max-width: 600px){
-    .game-container-sm{
+    @media screen and (max-width: 600px){
         margin-top: 0 !important;
         height: 100vh;
-    }
+        border: 0;
+        overflow: hidden;
+    }    
 }
+
+.v-dialog{
+    overflow: hidden;
+  }

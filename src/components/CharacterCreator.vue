@@ -59,7 +59,7 @@ export default {
         total: 9
       },
       {
-        name: 'Hat',
+        name: 'Accesory',
         selected: 1,
         total: 3
       },

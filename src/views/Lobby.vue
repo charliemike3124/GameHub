@@ -5,7 +5,19 @@
         <div class="char-container " data-aos="fade-up" >
           <CharacterGenerator class="ma-auto" :features="character.features" :width="70" :height="70"/>
           <div class="abs-center">
-            <div class="name-box"><span>{{character.name}}</span></div>
+            <div class="name-box">
+              <span>{{character.name}}</span>
+              <v-badge
+                v-if="lobby.hostId == character.id"
+                bordered
+                offset-x="15"
+                offset-y="-50"
+                class="host-badge"
+                color="yellow darken-3"
+                icon="mdi-crown"
+              >
+              </v-badge>
+            </div>
           </div>
         </div>
       </div>
@@ -34,13 +46,17 @@
           sm="6"
           cols="12"
         >
-              <GameMode data-aos="flip-left" data-aos-duration="1200" :data-aos-delay="200*i" v-bind="mode"/>
+              <GameMode data-aos="flip-left" data-aos-duration="1200" :data-aos-delay="200*i" 
+              v-bind="mode"
+              :isHost="isHost"/>
         </v-col>
       </v-row>
+      
       <v-row data-aos="fade-up">
         <v-col class="text-center">
         <v-divider/>
-          <v-btn class="mt-6" @click="startGame">Play</v-btn>
+          <v-btn v-if="isHost" class="mt-6" @click="startGame">Play</v-btn>
+          <div v-else class="mt-4">The lobby host is chosing the game mode.</div>
         </v-col>
       </v-row>
       <v-row data-aos="fade-up" data-aos-offset="-300">
@@ -50,8 +66,8 @@
       </v-row>
     </div>
     <!--GAME-->
-    <div class="max-height" v-if="gameStarted">
-      <component :is="KeyDestroyer"></component>
+    <div class="" v-if="gameStarted">
+      <component :is="selectedMode.component"></component>
     </div>
 
   </v-container>
@@ -74,8 +90,8 @@ import GameModes from "@/resources/GameModes"
 
     data: () => ({
       gameModes: null,
-      selectedGameMode: null,
-      gameStarted: false
+      gameStarted: false,
+      afterGameStartedClass: ""
     }),
     computed:{      
       ...mapState("lobby", ["lobby", "selectedMode"]),
@@ -83,24 +99,54 @@ import GameModes from "@/resources/GameModes"
       lobbyContClass(){
         let _class = "";
         if(this.gameStarted){
-          _class = "opacity-0";
+          _class = "opacity-0" + ` ${this.afterGameStartedClass}`;
         }
         return _class;
+      },
+      isHost(){
+        return this.lobby.hostId == this.characterId;
       }
     },
     methods: {
       ...mapActions("lobby", ["SetLobby", "SetSelectedMode"]),
       onBeforeUnloadHandler(ev){
-        if(ev){
-          this.lobby.characters = this.lobby.characters.filter(char => char.id != this.characterId);
-          DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);
+        if(ev){    
+          this.disconnect();
         }
       },
       UpdateLobbyState(doc){
-        this.SetLobby(doc.data());
+        try{
+          this.SetLobby(doc.data());
+          this.gameStarted = this.lobby.hasStarted ?? false;
+        }
+        catch(e){
+          this.disconnect();
+        }
+      },
+      disconnect(){        
+        this.lobby.characters = this.lobby.characters.filter(char => char.id != this.characterId);
+        if(this.isHost){
+          this.lobby.hostId = this.lobby.characters[0].id;
+        }
+        if(this.lobby.characters.length > 1){
+          DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);     
+        }
+        else{
+          DB.LobbyService.DeleteLobby(this.lobby.code);          
+        } 
       },
       startGame(){
         this.gameStarted = true;
+        setTimeout(() => {
+          this.afterGameStartedClass = "d-none";
+        }, 500);
+        this.lobby.hasStarted = true;
+        this.lobby.game = this.selectedMode.name;
+        this.lobby.characters.forEach(char => {
+          char.score = 0; 
+        })
+        DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);      
+        
       }
     },
     mounted(){
@@ -108,7 +154,7 @@ import GameModes from "@/resources/GameModes"
       addEventListener("beforeunload", this.onBeforeUnloadHandler);
       addEventListener("popstate", this.onBeforeUnloadHandler);      
       this.gameModes = GameModes;
-      if(!!this.selectedGameMode){
+      if(!!this.selectedGameMode && this.isHost){
         this.SetSelectedMode(this.gameModes[0]);
       }
     }

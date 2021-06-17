@@ -34,14 +34,24 @@ import GameMode from "@/models"
         type: String,
         required: true
       },
+      isHost: {
+        type: Boolean,
+        required: true,
+        default: false
+      },
     },
     computed: {      
       ...mapState("lobby", ["selectedMode"]),
       selectedStyle(){
         let selectedStyle = "";
-        let mode = GameMode.GameMode(this.name, this.url, this.desc);
-        if(this.selectedMode.name == mode.name){
-          selectedStyle = "background-color: #14ff3773;";
+        if(this.isHost){
+          let mode = GameMode.GameMode(this.name, this.url, this.desc);
+          if(this.selectedMode.name == mode.name){
+            selectedStyle = "background-color: #14ff3773;";
+          }
+        }
+        else{
+          selectedStyle = "background-color: #17171721"
         }
         return selectedStyle;
       }

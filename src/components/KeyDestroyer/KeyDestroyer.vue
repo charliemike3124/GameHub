@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <v-row>
-      
-    </v-row>
-  </div>
+  <v-row>
+    <v-col>
+      <span >eruda</span>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

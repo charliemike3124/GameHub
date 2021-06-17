@@ -1,10 +1,18 @@
 <template>
   <v-container class="game-container game-container-sm">
-    <v-row justify="center" class="mt-4"  data-aos="fade-up">    
-      <CharacterCreator>
-      </CharacterCreator>
+    <!--Logo-->
+    <v-row justify="center" class="text-center my-10"  data-aos="fade-up">    
+      <v-col>
+        LOGO
+      </v-col>
     </v-row>
-    <v-row justify="center" class="pa-2 home-container mt-1"  data-aos="fade-up">
+    <!--Char Creation-->
+    <v-row justify="center" class="mt-4"  data-aos="fade-up"  data-aos-delay="300">    
+        <CharacterCreator>
+        </CharacterCreator>
+    </v-row>
+    <!--Actions-->
+    <v-row justify="center" class="pa-2 home-container"  data-aos="fade-up"  data-aos-delay="600">
       <v-col lg="6" sm="8">
         <v-row>
           <v-col cols="12" align="center">
@@ -15,7 +23,7 @@
             Create Lobby
             </v-btn>
           </v-col>
-          <v-col cols="12" align="center"  data-aos="fade-up"  data-aos-delay="300">
+          <v-col cols="12" align="center">
           <v-divider></v-divider>
             <v-text-field
               class="mt-6 mb-4 input-max-width"
@@ -33,16 +41,34 @@
             </v-btn>
           </v-col>
         </v-row>
+        <v-row justify="center">
+          <v-col class="input-max-width" v-show="gettingLobby">
+              <v-progress-linear
+              indeterminate
+              color="white"
+              ></v-progress-linear>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <v-row justify="center">
-      <v-col class="input-max-width" v-show="gettingLobby">
-          <v-progress-linear
-          indeterminate
-          color="white"
-          ></v-progress-linear>
+    <!--Footer-->
+    <v-row  justify="center" data-aos="fade-up"  data-aos-delay="900">
+      <v-col class="text-center mt-10">
+        <a class="mx-2" href="https://www.linkedin.com/in/cvillalobosgtz/" target="_blank"><i class="mdi mdi-linkedin"></i></a>
+        <v-divider vertical/>
+        <a class="mx-2" @click.stop="showContactForm=true">Contact</a>
       </v-col>
     </v-row>
+    <!--Activated-->
+    <v-dialog
+      max-width="450"
+      :scrollable="false"
+      v-model="showContactForm"
+    > 
+      <ContactForm 
+      :recipient="'charliewebdev.contact@gmail.com'"
+      @cancelContact="showContactForm=false"/>
+    </v-dialog>
     <v-snackbar
       v-model="showSnackbar"
       timeout="2000"
@@ -54,15 +80,16 @@
 
 <script>
 import Character from "@/models";
-import { CharacterCreator } from "@/components";
+import { CharacterCreator, ContactForm } from "@/components";
 import { StringGenerators } from "@/resources/StringHelper";
 import {mapActions, mapState} from "vuex";
-import { DB } from "@/services";
+
 export default {
   name: 'Home',
   
   components: {
-    CharacterCreator
+    CharacterCreator,
+    ContactForm
   },
 
   computed: {
@@ -76,7 +103,8 @@ export default {
   data: () => ({
     lobbyCode: "",
     modeName: ["Key Destroyer"],
-    showSnackbar: false
+    showSnackbar: false,
+    showContactForm: false,
   }),
 
   methods:{
@@ -88,7 +116,8 @@ export default {
       let character = await Character.Character(this.characterName, this.characterFeatures, id);
       let lobby = {
         code: code,
-        characters: [character]
+        characters: [character],
+        hostId: id
       }
       await this.CreateLobby(lobby);
       if(!!this.lobby) this.$router.push({path: 'Lobby'});
@@ -108,17 +137,16 @@ export default {
       else{
         this.showSnackbar = true;
       }      
-    }
+    },
   },
 
   mounted(){
     if(!!this.lobby){      
-      this.lobby.characters = this.lobby.characters.filter(char => char.id != this.characterId);
-      DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);
       this.SetLobby(null);
     }
   }
 }
+
 </script>
 <style lang="less">
  @import (less) "../styles/views/Home.less";
