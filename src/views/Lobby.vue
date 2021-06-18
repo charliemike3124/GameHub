@@ -124,8 +124,6 @@ import Character from "@/models";
     methods: {
       ...mapActions("lobby", ["SetLobby", "SetSelectedMode"]),
       onBeforeUnloadHandler(ev){
-        debugger
-        console.log(ev);
         if(ev){    
           this.disconnect();
         }
@@ -165,8 +163,12 @@ import Character from "@/models";
         switch (this.selectedMode.name) {
           case "Key Destroyer":
             this.lobby.gameConfig = {
-              keyArray: StringGenerators.generateRandomScoredLetters(10,3, 15),
-              maxScore: 10
+              keyArray: StringGenerators.generateRandomScoredLetters(
+                  this.selectedMode.options.maxScore.selected, 
+                  this.selectedMode.options.minKeyCount.selected, 
+                  this.selectedMode.options.maxKeyCount.selected
+                ),
+              maxScore: this.selectedMode.options.maxScore.selected
             }
             break;
         }
@@ -184,16 +186,21 @@ import Character from "@/models";
       }
     },
     mounted(){
-      if(this.lobby.characters.some(char => char.id != this.characterId)){
-        let character = Character.Character(this.characterName, this.characterFeatures, this.characterId);
-        this.lobby.characters.push(character)
+      try{
+        if(this.lobby.characters.some(char => char.id != this.characterId)){
+          let character = Character.Character(this.characterName, this.characterFeatures, this.characterId);
+          this.lobby.characters.push(character)
+        }
+        DB.Hooks.OnSnapshot(this.UpdateLobbyState, this.lobby.code);
+        addEventListener("beforeunload", this.onBeforeUnloadHandler);
+        addEventListener("popstate", this.onBeforeUnloadHandler);    
+        this.gameModes = GameModes;
+        if(!this.selectedGameMode && this.isHost){
+          this.SetSelectedMode(this.gameModes[0]);
+        }
       }
-      DB.Hooks.OnSnapshot(this.UpdateLobbyState, this.lobby.code);
-      addEventListener("beforeunload", this.onBeforeUnloadHandler);
-      addEventListener("popstate", this.onBeforeUnloadHandler);    
-      this.gameModes = GameModes;
-      if(!this.selectedGameMode && this.isHost){
-        this.SetSelectedMode(this.gameModes[0]);
+      catch(ex){
+        this.$router.push({path: '/'});
       }
     }
   }

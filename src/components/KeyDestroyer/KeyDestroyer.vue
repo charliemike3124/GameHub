@@ -16,8 +16,8 @@
     </v-row>
     <v-row>
       <v-col class="text-center">
-        <div v-if="gameStarted">
-          <span class="text-h4">Press as fast as you can!</span>
+        <div v-if="gameStarted && currentKeyScore == 0 && currentKeyIndex == 0">
+          <span class="fs-200">Press as fast as you can!</span>
         </div>
       </v-col>
     </v-row>
