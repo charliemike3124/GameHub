@@ -1,8 +1,9 @@
-export default function Mode(name, url, desc, options){
+export default function Mode(name, url, desc, component, options){
     return {
         name: name,
         url: url,
-        desc: desc,
-        options: options
+        desc: desc,        
+        component: component,
+        options: options,
     }
 }

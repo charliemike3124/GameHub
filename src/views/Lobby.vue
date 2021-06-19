@@ -175,7 +175,7 @@ import Character from "@/models";
         DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);     
         setTimeout(() => {
           this.gameStarted = true;
-        }, 500);        
+        }, 750);        
       },
       resetLobby(){        
         this.lobby.gameConfig = {};
@@ -187,10 +187,6 @@ import Character from "@/models";
     },
     mounted(){
       try{
-        if(this.lobby.characters.some(char => char.id != this.characterId)){
-          let character = Character.Character(this.characterName, this.characterFeatures, this.characterId);
-          this.lobby.characters.push(character)
-        }
         DB.Hooks.OnSnapshot(this.UpdateLobbyState, this.lobby.code);
         addEventListener("beforeunload", this.onBeforeUnloadHandler);
         addEventListener("popstate", this.onBeforeUnloadHandler);    

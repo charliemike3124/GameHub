@@ -72,6 +72,10 @@ import GameMode from "@/models"
         type: String,
         required: true
       },
+      component: {
+        type: String,
+        required: true
+      },
       options: {
         type: Object,
         required: true
@@ -105,8 +109,7 @@ import GameMode from "@/models"
     methods: {
       ...mapActions("lobby", ["SetLobby", "SetSelectedMode"]),
       selectMode(){
-        console.log(this.selectedOptions)
-        let mode = GameMode.GameMode(this.name, this.url, this.desc, this.selectedOptions);
+        let mode = GameMode.GameMode(this.name, this.url, this.desc, this.component,this.selectedOptions);
         this.SetSelectedMode(mode);
       },
       openSettings(){
@@ -119,7 +122,6 @@ import GameMode from "@/models"
     },
     mounted(){
       this.selectedOptions = this.options;
-        console.log(this.selectedOptions)
     }
   }
 </script>
