@@ -26,7 +26,7 @@ a{
   color: var(--text-color) !important;
 }
 span{
-    font-family: cursive !important;
+font-family: 'Pangolin', cursive !important;
 }
 .app-container{
     background: var(--main-color);
@@ -35,7 +35,7 @@ span{
     height: 100%;
     width: 100%;
   
-    font-family: cursive !important;
+    font-family: 'Pangolin', cursive !important;
     font-weight: 500 !important;
     color: var(--text-color) !important;
 

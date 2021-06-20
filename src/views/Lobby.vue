@@ -72,7 +72,7 @@
       </v-row>
       <v-row data-aos="fade-up" data-aos-offset="-300">
         <v-col class="text-center">
-          Code: {{lobby.code}}
+          Code: <span class="fs-110 font-weight-bold">{{lobby.code}}</span>
         </v-col>
       </v-row>
     </div>

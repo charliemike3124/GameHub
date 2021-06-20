@@ -29,7 +29,7 @@
         </v-row>
         <v-row v-for="(option,i) in selectedOptions" :key="i">
           <v-col sm="5" cols="6">
-            <span class="font-weight-bold">{{option.name}}</span>
+            <span class="font-weight-bold">{{option.name}} ({{isHost? option.selected : '?'}})</span>
           </v-col>
           <v-col>
             <v-slider
@@ -40,6 +40,7 @@
               :thumb-size="20"
               thumb-label="always"
               ticks
+              :disabled="!isHost"
             ></v-slider>
           </v-col>
         </v-row>
