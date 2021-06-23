@@ -24,7 +24,7 @@
       class="pa-8 options-modal">
         <v-row class="mb-1 fs-150 font-weight-bold">
           <v-col>
-            <span> Options ({{selectedMode.name}})</span>
+            <span> Options ({{!!selectedMode? selectedMode.name : ''}})</span>
           </v-col>
         </v-row>
         <v-row v-for="(option,i) in selectedOptions" :key="i">

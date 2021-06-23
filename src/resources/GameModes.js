@@ -14,22 +14,30 @@ export default [
                 },
                 minKeyCount: { 
                     name: "Min. key count",
-                    selected: 3,
+                    selected: 5,
                     min: 3,
-                    max: 15
+                    max: 7
                 },
                 maxKeyCount: { 
                     name: "Max. key count",
                     selected: 15,
-                    min: 15,
-                    max: 40
+                    min: 7,
+                    max: 30
                 },
             }
         },
-        // {
-        //     name: "Dictionary",
-        //     url:  "KeyDestroyerLogo.png",
-        //     desc: "Write a definition that sounds like it could be the real meaning to the shown word.",
-        //     component: "Dictionary"
-        // },
+        {
+            name: "Castle Defense",
+            url:  "KeyDestroyerLogo.png",
+            desc: "Defend the castle in the middle of the map by placing defensing structures.",
+            component: "CastleDefense",
+            options: {
+                maxScore: { 
+                    name: "Difficulty",
+                    selected: 2,
+                    min: 1,
+                    max: 3
+                },
+            }
+        },
     ]

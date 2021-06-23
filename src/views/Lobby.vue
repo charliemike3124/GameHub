@@ -88,7 +88,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { CharacterGenerator, GameMode, KeyDestroyer } from "@/components";
+import { CharacterGenerator, GameMode, KeyDestroyer, CastleDefense } from "@/components";
 import { DB } from "@/services";
 import GameModes from "@/resources/GameModes"
 import { StringGenerators } from "@/resources/StringHelper";
@@ -100,7 +100,8 @@ import Character from "@/models";
     components:{
       CharacterGenerator,
       GameMode,
-      KeyDestroyer
+      KeyDestroyer,
+      CastleDefense
     },
 
     data: () => ({
@@ -185,7 +186,7 @@ import Character from "@/models";
         this.lobby.hasStarted = false;
       }
     },
-    mounted(){
+    created(){
       try{
         DB.Hooks.OnSnapshot(this.UpdateLobbyState, this.lobby.code);
         addEventListener("beforeunload", this.onBeforeUnloadHandler);
@@ -194,11 +195,26 @@ import Character from "@/models";
         if(!this.selectedGameMode && this.isHost){
           this.SetSelectedMode(this.gameModes[0]);
         }
+        //Reconnect character 
+        if(!!this.characterName && !!this.characterFeatures && !!this.characterId){
+          if(this.lobby.characters.filter(char => char.id === this.characterId).length == 0 ){     
+            let character = Character.Character(this.characterName, this.characterFeatures, this.characterId);     
+            this.lobby.characters.push(character);
+            DB.LobbyService.UpdateLobby(this.lobby.code, this.lobby);
+          }
+        }
+        else{
+          this.$router.push({path: '/'});
+        }
       }
       catch(ex){
         this.$router.push({path: '/'});
       }
-    }
+    },
+    beforeDestroy() {
+      removeEventListener('beforeunload', this.onBeforeUnloadHandler);
+      removeEventListener('popstate', this.onBeforeUnloadHandler);
+    },
   }
 </script>
 

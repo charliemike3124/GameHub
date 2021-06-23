@@ -8,6 +8,7 @@ import AOS from './plugins/AOS';
 import './styles/baseStyles.less';
 import "aos/dist/aos.css";
 
+const mazeGenerator = require('generate-maze');
 Vue.config.productionTip = false
 
 new Vue({
@@ -15,5 +16,6 @@ new Vue({
   store,
   AOS,
   vuetify,
+  mazeGenerator,
   render: h => h(App)
 }).$mount('#app')

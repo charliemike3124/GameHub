@@ -1,7 +1,7 @@
 <template>
-  <v-container class="game-container game-container-sm">
+  <v-container class="game-container game-container-sm p-rel">
     <!--Logo-->
-    <v-row justify="center" class="text-center my-10"  data-aos="fade-up">    
+    <v-row justify="center" class="text-center my-5"  data-aos="fade-up">    
       <v-col>
         LOGO
       </v-col>
@@ -35,7 +35,7 @@
             ></v-text-field>
             <v-btn
             @click="joinLobby"
-            :disabled="!!loadLobbyButtonDisabled"
+            :disabled="!!joinLobbyButtonDisabled"
             >
             Join Lobby
             </v-btn>
@@ -52,7 +52,7 @@
       </v-col>
     </v-row>
     <!--Footer-->
-    <v-row  justify="center" data-aos="fade-up"  data-aos-delay="900">
+    <v-row  class="footer" justify="center" data-aos="fade-up"  data-aos-delay="900" data-aos-offset="-300">
       <v-col class="text-center">
         <a class="mx-2" href="https://www.linkedin.com/in/cvillalobosgtz/" target="_blank"><i class="mdi mdi-linkedin"></i></a>
         <v-divider vertical/>
@@ -95,8 +95,8 @@ export default {
   computed: {
     ...mapState("lobby", ["gettingLobby", "lobby"]),
     ...mapState("character", ["characterFeatures", "characterName"]),
-    loadLobbyButtonDisabled(){
-      return !!this.lobbyCode.match(/[^A-Za-z0-9]+/g) || this.lobbyCode.length !== 7 || !!this.lobby;
+    joinLobbyButtonDisabled(){
+      return !!this.lobbyCode.match(/[^A-Za-z0-9]+/g) || this.lobbyCode.length !== 7 || this.lobby != null;
     }
   },
 
@@ -141,8 +141,10 @@ export default {
     },
   },
 
-  mounted(){
-    if(!!this.lobby)  this.SetLobby(null);
+  mounted(){    
+    setTimeout(() => {
+      if(!!this.lobby)  this.SetLobby(null);
+    }, 1000)
   }
 }
 
