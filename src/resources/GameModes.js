@@ -27,13 +27,13 @@ export default [
             }
         },
         {
-            name: "Castle Defense",
+            name: "Snake",
             url:  "KeyDestroyerLogo.png",
-            desc: "Defend the castle in the middle of the map by placing defensing structures.",
-            component: "CastleDefense",
+            desc: "Just the snake game but with a friend!",
+            component: "Snake",
             options: {
                 maxScore: { 
-                    name: "Difficulty",
+                    name: "Max score",
                     selected: 2,
                     min: 1,
                     max: 3

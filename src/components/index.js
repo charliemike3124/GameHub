@@ -3,7 +3,7 @@ import CharacterGenerator from './CharacterGenerator';
 import GameMode from './GameMode';
 import ContactForm from './ContactForm';
 import KeyDestroyer from './KeyDestroyer/KeyDestroyer';
-import CastleDefense from './CastleDefense/CastleDefense';
+import Snake from './Snake/Snake';
 
 export {
     CharacterCreator,
@@ -11,5 +11,5 @@ export {
     GameMode,
     KeyDestroyer,
     ContactForm,
-    CastleDefense
+    Snake
 }

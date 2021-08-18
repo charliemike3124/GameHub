@@ -88,7 +88,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { CharacterGenerator, GameMode, KeyDestroyer, CastleDefense } from "@/components";
+import { CharacterGenerator, GameMode, KeyDestroyer, Snake } from "@/components";
 import { DB } from "@/services";
 import GameModes from "@/resources/GameModes"
 import { StringGenerators } from "@/resources/StringHelper";
@@ -101,7 +101,7 @@ import Character from "@/models";
       CharacterGenerator,
       GameMode,
       KeyDestroyer,
-      CastleDefense
+      Snake
     },
 
     data: () => ({

@@ -8,8 +8,9 @@ import AOS from './plugins/AOS';
 import './styles/baseStyles.less';
 import "aos/dist/aos.css";
 
+
 const mazeGenerator = require('generate-maze');
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,

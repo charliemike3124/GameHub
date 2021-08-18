@@ -14,6 +14,7 @@
     "generate-maze": "^1.0.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vue-signature-pad": "^2.0.2",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2",
     "vuex-persist": "^3.1.3"

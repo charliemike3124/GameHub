@@ -141,7 +141,8 @@ export default {
     },
   },
 
-  mounted(){    
+  mounted(){
+    this.$router.push({path: '/TestComponent'});
     setTimeout(() => {
       if(!!this.lobby)  this.SetLobby(null);
     }, 1000)
